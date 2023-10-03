@@ -1,4 +1,5 @@
 import Addvertistment from "./../../../../models/addvertistment";
+import { Op } from "sequelize";
 
 export const addNewAddvertisment = async (data) => {
   return await Addvertistment.create({
@@ -22,11 +23,75 @@ export const getAllAddvertisments = async () => {
   return await Addvertistment.findAll();
 };
 
-export const getAllApprovedAddvertisments = async () => {
-  return await Addvertistment.findAll({
+export const getAllApprovedAddvertisments = async (size, page) => {
+  return await Addvertistment.findAndCountAll({
+    limit: size,
+    offset: page * size,
     where: { approved: true },
     order: [["createdAt", "DESC"]],
   });
+};
+
+export const getAllApprovedAddvertismentsByCategory = async (
+  size,
+  page,
+  catId
+) => {
+  return await Addvertistment.findAndCountAll({
+    limit: size,
+    offset: page * size,
+    where: { approved: true, categoryId: catId },
+    order: [["createdAt", "DESC"]],
+  });
+};
+
+export const getResultOfSearch = async (
+  district,
+  category,
+  keyword,
+  size,
+  page
+) => {
+  let whereClause = {};
+
+  if (district) {
+    whereClause = { ...whereClause, district: district };
+  }
+
+  if (category) {
+    whereClause = { ...whereClause, categoryId: category };
+  }
+
+  if (keyword) {
+    whereClause = {
+      ...whereClause,
+      productName: {
+        [Op.substring]: keyword,
+      },
+    };
+  }
+
+  return await Addvertistment.findAndCountAll({
+    limit: size,
+    offset: page * size,
+    where: whereClause,
+    order: [["createdAt", "DESC"]],
+  });
+};
+
+export const getAllUnApprovedAddvertisments = async () => {
+  return await Addvertistment.findAll({
+    where: { approved: null },
+    order: [["createdAt", "DESC"]],
+  });
+};
+
+export const getAddvertismentDetails = async (id) => {
+  return await Addvertistment.findOne({ where: { addId: id } });
+};
+
+export const getAddvertismentsByUserId = async (id) => {
+  return await Addvertistment.findAll({ where: { addedUserId: id } });
 };
 
 export const updateApprovedStatusOfAdd = async (id, data) => {

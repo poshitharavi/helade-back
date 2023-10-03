@@ -6,8 +6,8 @@ const sequelize = new Sequelize(
   process.env.DATABASE_USER,
   process.env.DATABASE_PASSWORD,
   {
-    host: "localhost",
-    dialect: "postgres",
+    host: process.env.HOST,
+    dialect: "mysql",
     pool: {
       max: 5,
       idle: 30000,

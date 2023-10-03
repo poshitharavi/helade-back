@@ -75,6 +75,10 @@ const Addvertistment = db.define(
       allowNull: false,
       defaultValue: 0,
     },
+    rejectReason: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
   },
   {
     timestamps: true,

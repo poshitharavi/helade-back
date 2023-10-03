@@ -2,6 +2,7 @@ import express from "express"; //import express npm package
 import routes from "./routes"; //import routes folder
 import cors from "cors";
 import db from "./config/database";
+import bodyParser from "body-parser";
 
 require("dotenv").config(); //adding environmental variables
 
@@ -11,7 +12,8 @@ const app = express();
  * Middleware
  */
 app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(express.static("./temp/img"));
 
 /**
  * Check database connection successfull
